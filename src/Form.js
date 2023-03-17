@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { flushSync } from "react-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { TbCopy } from "react-icons/tb";
 import { ToastContainer, toast } from "react-toastify";
@@ -26,21 +27,31 @@ const Form = () => {
     facebook: "",
   });
 
+  useEffect(() => {
+    if (submitted) {
+      toast.success("Password copied successfully");
+    }
+  }, [submitted]);
+
   const handleChange = (e) => {
     setUsersData({
       ...usersData,
       [e.target.name]: e.target.value,
     });
+
     setError({
       ...error,
       [e.target.name]: "",
     });
-    setCopyPassword(e.target.value);
+
+    if (e.target.name === "password") {
+      setCopyPassword(e.target.value);
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { fullName } = usersData;
+    const { fullName, userName, email, phone, password, facebook } = usersData;
 
     const userErros = {
       fullName: "",
@@ -117,20 +128,8 @@ const Form = () => {
 
     setError(userErros);
     if (isError) return;
-    setSubmitted(true);
 
-    if (submitted) {
-      toast.success("Form submitted successfully", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
+    setSubmitted(true);
 
     setUsersData({
       fullName: "",
@@ -141,9 +140,7 @@ const Form = () => {
       facebook: "",
     });
 
-    // if (userErros.values().some((elm) => elm.length > 0)) {
-    //   return;
-    // }
+    setCopyPassword("");
   };
 
   const handleShowPassword = () => {
@@ -154,16 +151,7 @@ const Form = () => {
     navigator.clipboard.writeText(copyPassword);
 
     if (copyPassword) {
-      toast.success("Password copied successfully", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      toast.success("Password copied successfully");
     }
   };
   const { fullName, userName, email, phone, password, facebook } = usersData;
