@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 const Form = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [copyPassword, setCopyPassword] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   const [usersData, setUsersData] = useState({
     fullName: "",
@@ -50,42 +51,55 @@ const Form = () => {
       facebook: "",
     };
 
+    let isError = false;
+
     if (fullName === "") {
+      isError = true;
       userErros.fullName = "Full Name is required";
     } else if (fullName.length < 3) {
+      isError = true;
       userErros.fullName = "Full Name must be greater then 3";
     }
 
     const regexUserName = /^[a-zA-Z0-9_-]{3,16}$/;
 
     if (userName === "") {
+      isError = true;
       userErros.userName = "User Name is required";
     } else if (!regexUserName.test(userName)) {
+      isError = true;
       userErros.userName = "User name is not valid";
     }
 
     const regexEmail = /^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 
     if (email === "") {
+      isError = true;
       userErros.email = "Email Address is required";
     } else if (!regexEmail.test(email)) {
+      isError = true;
       userErros.email = "Valid email is required";
     }
 
-    const regexPhone = /^(?:\+\d{1,3}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;
+    // const regexPhone = /^(?:\+\d{1,3}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;
 
     if (phone === "") {
+      isError = true;
       userErros.phone = "Phone Number is required";
-    } else if (!regexPhone.test(Number(phone))) {
-      userErros.phone = "Phone Number is not valid";
     }
+    // else if (!regexPhone.test(Number(phone))) {
+    //   isError = true;
+    //   userErros.phone = "Phone Number is not valid";
+    // }
 
     const regexPassword =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     if (password === "") {
+      isError = true;
       userErros.password = "Password is required";
     } else if (!regexPassword.test(password)) {
+      isError = true;
       userErros.password =
         "At least one lowercase letter one uppercase letter one digit one special character minimum length of 8 characters ";
     }
@@ -94,12 +108,42 @@ const Form = () => {
       /(http:\/\/)?(https:\/\/)?(www)?\.?(facebook)\.\w.+\/\w.+/gim;
 
     if (facebook === "") {
+      isError = true;
       userErros.facebook = "Facebook url is required";
     } else if (!regexFacebookUrl.test(facebook)) {
+      isError = true;
       userErros.facebook = "Valid Facebook url is required";
     }
 
     setError(userErros);
+    if (isError) return;
+    setSubmitted(true);
+
+    if (submitted) {
+      toast.success("Form submitted successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+
+    setUsersData({
+      fullName: "",
+      userName: "",
+      email: "",
+      phone: "",
+      password: "",
+      facebook: "",
+    });
+
+    // if (userErros.values().some((elm) => elm.length > 0)) {
+    //   return;
+    // }
   };
 
   const handleShowPassword = () => {
@@ -138,6 +182,7 @@ const Form = () => {
         pauseOnHover
         theme="dark"
       />
+
       <form onSubmit={handleSubmit} noValidate>
         <div className="mb-3">
           <label className="form-label">Full Name</label>
