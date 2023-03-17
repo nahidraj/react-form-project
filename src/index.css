@@ -1,0 +1,24 @@
+.box {
+  width: 600px;
+  margin: 0 auto;
+  margin-top: 80px;
+}
+
+.pass-icon {
+  position: absolute;
+  top: 0;
+  font-size: 23px;
+  right: 0;
+  top: 8px;
+  cursor: pointer;
+  right: 13px;
+}
+
+.copy {
+  position: absolute;
+  font-size: 23px;
+  right: 0;
+  top: 8px;
+  cursor: pointer;
+  right: 43px;
+}
